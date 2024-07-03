@@ -16,9 +16,9 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  // async findUserById(id: number): Promise<User> {
-  //   return this.userRepository.findOne(id);
-  // }
+  async findUser(id: number): Promise<User> {
+    return this.userRepository.findOneBy({ id });
+  }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const newUser = this.userRepository.create({
@@ -27,10 +27,12 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
-  async updateUserById(id: number, updateUserDto: UpdateUserDto) {
-    // const updatedUser = this.userRepository.create({
-    //   ...updateUserDto
-    // });
-    return this.userRepository.update({id}, updateUserDto);
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    await this.userRepository.update(id, updateUserDto);
+    return this.userRepository.findOneBy({ id });
+  }
+
+  async deleteUser(id: number) {
+    return this.userRepository.delete(id);
   }
 }
