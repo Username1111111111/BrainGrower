@@ -26,6 +26,11 @@ export class User {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    console.log('Hashing password for:', this.email);
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    } else {
+      throw new Error('Password is required');
+    }
   }
 }
