@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { errorMessage } from 'src/errorMessages';
 
 @Entity('User')
 export class User {
@@ -26,6 +27,10 @@ export class User {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    } else {
+      throw new Error(errorMessage.PASSWORD_REQUIRED);
+    }
   }
 }
