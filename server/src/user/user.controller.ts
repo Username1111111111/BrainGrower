@@ -2,6 +2,7 @@ import { Controller, Body, Get, Post, Put, Delete, Param, ParseIntPipe } from '@
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
+import { GetUserDto } from './dto/GetUser.dto';
 
 @Controller('user')
 export class UserController {
@@ -9,22 +10,22 @@ export class UserController {
   constructor(private userService: UserService) { }
 
   @Get()
-  findAll() {
+  findAll(): Promise<GetUserDto[]> {
     return this.userService.findAll();
   }
 
   @Get(":id")
-  findUser(@Param('id', ParseIntPipe) id: number) {
+  findUser(@Param('id', ParseIntPipe) id: number): Promise<GetUserDto> {
     return this.userService.findUser(id);
   }
 
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(@Body() createUserDto: CreateUserDto): Promise<GetUserDto> {
     return this.userService.createUser(createUserDto);
   }
 
   @Put(':id')
-  updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+  updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto): Promise<GetUserDto> {
     return this.userService.updateUser(id, updateUserDto);
   }
 

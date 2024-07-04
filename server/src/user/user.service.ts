@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
+import { GetUserDto } from './dto/GetUser.dto';
 
 @Injectable()
 export class UserService {
@@ -12,24 +13,40 @@ export class UserService {
     private userRepository: Repository<User>,
   ) { }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(): Promise<GetUserDto[]> {
+    const users = await this.userRepository.find();
+    return users.map(user => {
+      const { password, ...result } = user;
+      return result as GetUserDto;
+    });
   }
 
-  async findUser(id: number): Promise<User> {
-    return this.userRepository.findOneBy({ id });
+  async findUser(id: number): Promise<GetUserDto> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (user) {
+      const { password, ...result } = user;
+      return result as GetUserDto;
+    }
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<GetUserDto> {
     const newUser = this.userRepository.create({
       ...createUserDto
     });
-    return this.userRepository.save(newUser);
+    const savedUser = await this.userRepository.save(newUser);
+    if (savedUser) {
+      const { password, ...result } = savedUser;
+      return result as GetUserDto;
+    }
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<GetUserDto> {
     await this.userRepository.update(id, updateUserDto);
-    return this.userRepository.findOneBy({ id });
+    const updatedUser = await this.userRepository.findOneBy({ id });
+    if (updatedUser) {
+      const { password, ...result } = updatedUser;
+      return result as GetUserDto;
+    }
   }
 
   async deleteUser(id: number) {
