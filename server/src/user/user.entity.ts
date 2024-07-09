@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { errorMessage } from 'src/errorMessages';
+import { errorMessage } from '../errorMessages';
 
 @Entity('User')
 export class User {
