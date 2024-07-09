@@ -3,11 +3,9 @@ import SignupForm from "../ui/SignupForm";
 
 export default function CreateUser() {
 
-  const content = <SignupForm/>;
-
   return (
     <>
-      <Page content={content}/>
+      <Page content={<SignupForm/>}/>
     </>
   )
 }

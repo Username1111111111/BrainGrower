@@ -1,5 +1,5 @@
 export default async function requestUsers() {
-    const domain = import.meta.env.VITE_SERVER_DOMAIN;
+    const domain: string | undefined = import.meta.env.VITE_SERVER_DOMAIN;
 
     const req = new Request(`${domain}/user/`, {
         method: "GET",
@@ -18,6 +18,10 @@ export default async function requestUsers() {
         const data = await res.json();
         return data;
     } catch (error) {
-        throw new Error(error);
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        } else {
+            throw new Error(String(error));
+        }
     }
 }

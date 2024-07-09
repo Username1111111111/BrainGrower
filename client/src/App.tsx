@@ -5,7 +5,7 @@ import CreateUser from "./pages/CreateUser";
 import UpdateUserPage from "./pages/UpdateUserPage";
 import { UsersProvider } from "./lib/context/userContext";
 
-function App() {
+const App: React.FC = () => {
     return (
         <UsersProvider>
             <Router>
