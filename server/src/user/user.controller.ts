@@ -21,19 +21,19 @@ export class UserController {
   }
 
   @Get(":id")
-  @Roles('admin', 'user')
+  @Roles('admin')
   findUser(@Param('id', ParseIntPipe) id: number): Promise<GetUserDto> {
     return this.userService.findUser(id);
   }
 
   @Get("email/:email")
-  @Roles('admin', 'user')
+  @Roles('admin')
   findUserByEmail(@Param('email') email: string): Promise<AuthUserDto> {
     return this.userService.findUserByEmail(email);
   }
 
   @Post()
-  @Roles('admin', 'user')
+  @Roles('admin')
   createUser(@Body() createUserDto: CreateUserDto): Promise<GetUserDto> {
     return this.userService.createUser(createUserDto);
   }
@@ -45,7 +45,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @Roles('admin', 'user')
+  @Roles('admin')
   deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.deleteUser(id);
   }

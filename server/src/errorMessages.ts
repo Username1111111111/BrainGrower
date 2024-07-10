@@ -4,5 +4,7 @@ interface ErrorObject {
 
 export const errorMessage: ErrorObject = {
   PASSWORD_REQUIRED: 'Password is required',
-  DONT_HAVE_PERMISSION_TO_ACCESS: 'You do not have the necessary permissions to access this resource.'
+  DONT_HAVE_PERMISSION_TO_ACCESS: 'You do not have the necessary permissions to access this resource.',
+  USER_EXISTS: 'User with such email already exists',
+  PASSWORDS_DONT_MATCH: 'Passwords do not match'
 }

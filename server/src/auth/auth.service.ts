@@ -1,7 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException  } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException  } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/signUp.dto';
+import { errorMessage } from 'src/errorMessages';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -13,9 +14,9 @@ export class AuthService {
 
   async signIn(email: string, plainTextPassword: string): Promise<{ access_token: string }> {
     const user = await this.userService.findUserByEmail(email);
-    const samePassword = await bcrypt.compare(plainTextPassword, user.password);
+    const validPassword = await bcrypt.compare(plainTextPassword, user.password);
 
-    if (!user || !samePassword) {
+    if (!user || !validPassword) {
       throw new UnauthorizedException();
     }
     const { password, ...result } = user;
@@ -26,11 +27,16 @@ export class AuthService {
   }
 
   async singUp(signUpDto: SignUpDto): Promise<void> {
-    const { email, password, name } = signUpDto;
+    const { email, password, confirmPassword, name } = signUpDto;
+
+    if (password !== confirmPassword) {
+      throw new BadRequestException(errorMessage.PASSWORDS_DONT_MATCH);
+    }
+
     const existingUser = await this.userService.findUserByEmail(email);
 
     if (existingUser) {
-      throw new ConflictException('User already exists');
+      throw new ConflictException(errorMessage.USER_EXISTS);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

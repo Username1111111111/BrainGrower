@@ -4,7 +4,7 @@ export default function Home() {
 
   return (
     <>
-      <Page content={<>Hello</>}/>
+      <Page content={<>Welcome to the BrainGrower!</>}/>
     </>
   )
 }
