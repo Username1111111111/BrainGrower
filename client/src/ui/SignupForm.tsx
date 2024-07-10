@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { useAddUserMutation } from '../redux/userApi';
 import { MESSAGE } from '../lib/message';
 
 export default function SignupForm() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const domain = import.meta.env.VITE_SERVER_DOMAIN;
+    const [createUser, { isLoading, error }] = useAddUserMutation();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         const userData = {
             name,
             email,
@@ -18,20 +19,12 @@ export default function SignupForm() {
         };
 
         try {
-            const response = await fetch(`${domain}/user`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            });
-
-            if (!response.ok) {
-                throw new Error(`${response.status}`);
-            }
-
-        } catch (error) {
-            throw new Error(MESSAGE.ERROR_CREATING_USER, error);
+            await createUser(userData).unwrap();
+            setName('');
+            setEmail('');
+            setPassword('');
+        } catch (err) {
+            console.error(MESSAGE.ERROR_CREATING_USER, err);
         }
     };
 
@@ -78,7 +71,10 @@ export default function SignupForm() {
                     />
                 </li>
             </ul>
-            <Button type="submit">Create</Button>
+            <Button type="submit" disabled={isLoading}>
+                {isLoading ? 'Creating...' : 'Create'}
+            </Button>
+            {error && <div className="text-danger">{MESSAGE.ERROR_CREATING_USER}</div>}
         </form>
     );
 }

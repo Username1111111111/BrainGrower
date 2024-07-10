@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import CreateUser from "./pages/CreateUser";
 import UpdateUserPage from "./pages/UpdateUserPage";
-import { UsersProvider } from "./lib/context/userContext";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
-function App() {
+const App: React.FC = () => {
     return (
-        <UsersProvider>
+        <Provider store={store}>
             <Router>
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -15,7 +16,7 @@ function App() {
                     <Route path="/user/update/" element={<UpdateUserPage />} />
                 </Routes>
             </Router>
-        </UsersProvider>
+        </Provider>
     );
 }
 
