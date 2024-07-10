@@ -1,23 +1,45 @@
-import { useState, useEffect } from "react";
-import { useUsers } from "../lib/context/userContext";
-import { MESSAGE } from "../lib/message";
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { useUpdateUserMutation, useFetchUsersQuery } from '../redux/userApi';
+import { MESSAGE } from '../lib/message';
 
 export default function UpdateUser() {
-    const { selectedUser, getUsers } = useUsers();
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const domain = import.meta.env.VITE_SERVER_DOMAIN;
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [initialName, setInitialName] = useState('');
+    const [initialEmail, setInitialEmail] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const selectedUser = useSelector((state: RootState) => state.selectedUser.user);
+    const [success, setSuccess] = useState(false);
+    const [updateUser] = useUpdateUserMutation();
+    const { refetch } = useFetchUsersQuery();
 
     useEffect(() => {
         if (selectedUser) {
             setName(selectedUser.name);
             setEmail(selectedUser.email);
+            setPassword('');
+            setInitialName(selectedUser.name);
+            setInitialEmail(selectedUser.email);
         }
     }, [selectedUser]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!selectedUser || isSubmitting) return;
+
+        if (
+            name === initialName &&
+            email === initialEmail &&
+            !password
+        ) {
+            return;
+        }
+
+        setIsSubmitting(true);
 
         const userData = {
             name,
@@ -26,30 +48,31 @@ export default function UpdateUser() {
         };
 
         try {
-            const response = await fetch(
-                `${domain}/user/${selectedUser.id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(userData),
-                }
-            );
+            const res = await updateUser({ id: selectedUser.id, ...userData }).unwrap();
+            if (res) {
+                setSuccess(true);
+                setTimeout(() => setSuccess(false), 3000);
 
-            if (!response.ok) {
-                throw new Error(`${response.status}`);
+                setName(res.name);
+                setEmail(res.email);
+                setPassword('');
+                setInitialName(res.name);
+                setInitialEmail(res.email);
+
+                refetch();
             }
-
-            getUsers();
         } catch (error) {
-            throw new Error(MESSAGE.ERROR_UPDATING_USER, error);
+            throw new Error(`${MESSAGE.ERROR_UPDATING_USER}: ${error}`);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     if (!selectedUser) {
         return <div className="text-center">Select a user to edit</div>;
     }
+
+    const isFormChanged = name !== initialName || email !== initialEmail || password !== '';
 
     return (
         <form
@@ -84,10 +107,7 @@ export default function UpdateUser() {
                     />
                 </li>
                 <li className="row d-flex justify-content-center align-items-center p-0 m-0 mx-2">
-                    <label
-                        className="col-5 text-center p-0 m-0"
-                        htmlFor="password"
-                    >
+                    <label className="col-5 text-center p-0 m-0" htmlFor="password">
                         Password:
                     </label>
                     <input
@@ -100,9 +120,19 @@ export default function UpdateUser() {
                     ></input>
                 </li>
                 <li className="d-flex justify-content-end align-items-end align-self-end p-0 m-0 mx-2">
-                    <button className="btn btn-primary" type="submit">
-                        Update
-                    </button>
+                    {success ? (
+                        <button className="btn btn-success" type="submit" disabled>
+                            Successful!
+                        </button>
+                    ) : (
+                        <button
+                            className="btn btn-primary"
+                            type="submit"
+                            disabled={isSubmitting || !isFormChanged}
+                        >
+                            {isSubmitting ? 'Updating...' : 'Update'}
+                        </button>
+                    )}
                 </li>
             </ul>
         </form>

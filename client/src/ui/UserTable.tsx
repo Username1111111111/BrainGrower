@@ -1,11 +1,27 @@
-import { useUsers } from "../lib/context/userContext";
+import { userApi } from '../redux/userApi';
+import { User } from '../types/User';
+import { setSelectedUser } from '../redux/selectedUserSlice';
+import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
 
 export default function UserTable() {
-    const { users, loading, selectUser } = useUsers();
+    const { data: users, error, isLoading, refetch } = userApi.useFetchUsersQuery();
+    const dispatch = useDispatch();
+    const [updateSuccess, setUpdateSuccess] = useState(false);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    const handleSelectUser = (user: User) => {
+        dispatch(setSelectedUser(user));
+    };
+
+    useEffect(() => {
+        if (updateSuccess) {
+            refetch();
+            setUpdateSuccess(false);
+        }
+    }, [updateSuccess, refetch]);
+
+    if (isLoading) return <div className='text-center'>Loading...</div>;
+    if (error) return <div className='text-center'>Error fetching users</div>;
 
     return (
         <div className="bg-body-secondary flex-column border border-secondary rounded p-2 d-flex justify-content-center p-0 m-0 mt-1  d-flex justify-content-center align-items-center">
@@ -20,7 +36,7 @@ export default function UserTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) => (
+                    {users?.map((user: User) => (
                         <tr className="rounded m-0" key={user.id}>
                             <td className="m-0 p-1 align-middle text-left">
                                 {user.id}
@@ -34,7 +50,7 @@ export default function UserTable() {
                             <td className="m-0 p-1 align-middle text-left">
                                 <button
                                     className="btn btn-transparent p-1"
-                                    onClick={() => selectUser(user)}
+                                    onClick={() => handleSelectUser(user)}
                                 >
                                     ⚙️
                                 </button>
