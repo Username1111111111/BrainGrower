@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useLoginUserMutation } from '../redux/userApi';
 import { MESSAGE } from '../lib/message';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
     const [plainTextPassword, setPlainTextPassword] = useState('');
     const [loginUser, { isLoading, error }] = useLoginUserMutation();
+    const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,10 +20,14 @@ export default function LoginForm() {
         };
 
         try {
+            console.log(userData);
             const response = await loginUser(userData).unwrap();
             localStorage.setItem('token', response.access_token);
+            localStorage.setItem('role', response.role);
+            setSuccessMessage(response.message);
+            navigate('/');
         } catch (error) {
-            console.error(`${MESSAGE.ERROR_LOGIN_USER} ${error}`);
+            console.error(`${MESSAGE.ERROR_LOGIN_USER}: ${error}`);
         }
     };
 
@@ -58,6 +65,7 @@ export default function LoginForm() {
                 {isLoading ? 'Signing in...' : 'Login'}
             </Button>
             {error && <div className="text-danger text-center">{MESSAGE.ERROR_LOGIN_USER}</div>}
+            {successMessage && <div className="text-success text-center">{successMessage}</div>}
         </form>
     );
 }

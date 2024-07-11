@@ -11,7 +11,7 @@ async function bootstrap() {
   const corsOptions: CorsOptions = {
     origin: configService.get<string>('FRONTEND_URL'),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Accept',
+    allowedHeaders: ['Authorization', 'Content-Type, Accept'],
     credentials: true,
   };
 

@@ -77,7 +77,7 @@ export default function SignupForm() {
                     />
                 </li>
                 <li className="row d-flex flex-row m-2">
-                    <label className="col-4 ps-0 text-nowrap" htmlFor="password">
+                    <label className="col-4 ps-0 text-nowrap" htmlFor="confpassword">
                         Confirm password:
                     </label>
                     <input

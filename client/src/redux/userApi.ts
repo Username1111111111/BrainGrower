@@ -3,8 +3,19 @@ import { User } from "../types/User";
 
 const baseUrl = import.meta.env.VITE_SERVER_DOMAIN;
 
+const baseQuery = fetchBaseQuery({
+  baseUrl,
+  prepareHeaders: (headers) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  },
+});
+
 export const userApi = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl }),
+  baseQuery,
   endpoints: (builder) => ({
     fetchUser: builder.query<User, number>({
       query: (id) => `user/${id}`,
