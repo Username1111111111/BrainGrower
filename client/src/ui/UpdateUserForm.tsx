@@ -73,11 +73,12 @@ export default function UpdateUser() {
     }
 
     const isFormChanged = name !== initialName || email !== initialEmail || password !== '';
+    const fC = 'bg-body-secondary border border-secondary rounded p-2 d-flex justify-content-center align-items-center';
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-body-secondary border border-secondary rounded p-2 d-flex justify-content-center align-items-center"
+            className={fC}
         >
             <ul className="d-flex flex-row justify-content-center align-items-center p-0 m-0">
                 <li className="row d-flex justify-content-center align-items-center p-0 m-0 mx-2">

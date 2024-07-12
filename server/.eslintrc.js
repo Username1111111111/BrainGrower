@@ -28,6 +28,8 @@ module.exports = {
                 
             }
         ],
-        "bracketSpacing": true // lifesaver
+        "bracketSpacing": true, // lifesaver
+        'no-console': ['error', { allow: ['warn', 'error'] }],
+        'max-len': ['error', { code: 120 }],
     }
 };

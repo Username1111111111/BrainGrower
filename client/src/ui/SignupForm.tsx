@@ -34,8 +34,10 @@ export default function SignupForm() {
         }
     };
 
+    const fClass = "bg-body-secondary flex-column border border-secondary rounded p-2 d-flex justify-content-center";
+
     return (
-        <form onSubmit={handleSubmit} className="bg-body-secondary flex-column border border-secondary rounded p-2 d-flex justify-content-center">
+        <form onSubmit={handleSubmit} className={fClass}>
             <ul className="d-flex flex-column justify-content-start p-0">
                 <li className="row d-flex flex-row m-2">
                     <label className="col-4 ps-0" htmlFor="name">

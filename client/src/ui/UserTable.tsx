@@ -22,9 +22,11 @@ export default function UserTable() {
 
     if (isLoading) return <div className='text-center'>Loading...</div>;
     if (error) return <div className='text-center'>Error fetching users</div>;
+    const fc = "bg-body-secondary flex-column border border-secondary rounded p-2 d-flex";
+    const fc2 = "justify-content-center p-0 m-0 mt-1  d-flex justify-content-center align-items-center";
 
     return (
-        <div className="bg-body-secondary flex-column border border-secondary rounded p-2 d-flex justify-content-center p-0 m-0 mt-1  d-flex justify-content-center align-items-center">
+        <div className={`${fc}+${fc2}`}>
             <h4 className="text-center">Users</h4>
             <table className="table table-striped rounded">
                 <thead className="rounded">
