@@ -9,7 +9,6 @@ import UpdateUserPage from "./pages/UpdateUserPage";
 import ProfilePage from "./pages/ProfilePage";
 
 const App: React.FC = () => {
-
     return (
         <Provider store={store}>
             <Router>
