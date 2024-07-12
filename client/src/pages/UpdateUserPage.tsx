@@ -1,20 +1,9 @@
 import Page from "../ui/page/Page";
 import UpdateUserForm from "../ui/UpdateUserForm";
 import UserTable from "../ui/UserTable";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import withAuthRedirect from '../ui/withAuthRedirect';
 
-export default function UpdateUserPage() {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!token || role !== 'admin') {
-            navigate('/');
-        }
-    }, [token, role, navigate]);
-
+function UpdateUserPage() {
     const content = (
         <div>
             <UpdateUserForm />
@@ -22,9 +11,7 @@ export default function UpdateUserPage() {
         </div>
     );
 
-    return (
-        <>
-            {token && role == 'admin' && <Page content={content} />}
-        </>
-    );
+    return <Page content={content} />;
 }
+
+export default withAuthRedirect(UpdateUserPage, '/', (token, role) => !token || role !== 'admin');

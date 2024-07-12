@@ -1,21 +1,9 @@
 import Page from "../ui/page/Page";
 import LoginForm from "../ui/LoginForm";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import withAuthRedirect from '../ui/withAuthRedirect';
 
-export default function LoginPage() {
-  const token = localStorage.getItem('token');
-  const navigate = useNavigate();
-
-  useEffect(() => {
-      if (token) {
-          navigate('/');
-      }
-  }, [token, navigate]);
-
-  return (
-    <>
-      {!token && <Page content={<LoginForm/>}/>}
-    </>
-  )
+function LoginPage() {
+  return <Page content={<LoginForm />} />;
 }
+
+export default withAuthRedirect(LoginPage, '/', (token) => !!token);
