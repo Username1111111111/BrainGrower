@@ -25,10 +25,9 @@ module.exports = {
             'error',
             {
                 endOfLine: 'auto',
-                
+                bracketSpacing: true, // lifesaver, but was in the wrong place
             }
         ],
-        "bracketSpacing": true, // lifesaver
         'no-console': ['error', { allow: ['warn', 'error'] }],
         'max-len': ['error', { code: 120 }],
     }
