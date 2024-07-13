@@ -1,5 +1,5 @@
 import { MESSAGE } from './../Message';
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException  } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/signUp.dto';
@@ -9,14 +9,18 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
-  async signIn(email: string, plainTextPassword: string): Promise<{ access_token: string, role: string }> {
+  async signIn(email: string, plainTextPassword: string): Promise<{ access_token: string; role: string }> {
     const user = await this.userService.findUserByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const validPassword = await bcrypt.compare(plainTextPassword, user.password);
 
-    if (!user || !validPassword) {
+    if (!validPassword) {
       throw new UnauthorizedException();
     }
     const { password, ...result } = user;
@@ -25,7 +29,7 @@ export class AuthService {
 
     return {
       access_token,
-      role: result.role
+      role: result.role,
     };
   }
 

@@ -5,13 +5,20 @@ import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { GetUserDto } from './dto/GetUser.dto';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '../auth/guard/auth.guard';
+
+const mockJwtService = {
+  sign: jest.fn(),
+  verify: jest.fn(),
+};
 
 describe('UserController', () => {
   let controller: UserController;
   let userService: UserService;
-  let REPOSITORY_TOKEN =  getRepositoryToken(User);
+  const REPOSITORY_TOKEN = getRepositoryToken(User);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,6 +28,16 @@ describe('UserController', () => {
         {
           provide: REPOSITORY_TOKEN,
           useClass: Repository,
+        },
+        {
+          provide: JwtService,
+          useValue: mockJwtService,
+        },
+        {
+          provide: AuthGuard,
+          useValue: {
+            canActivate: jest.fn(() => true),
+          },
         },
       ],
     }).compile();
@@ -36,8 +53,22 @@ describe('UserController', () => {
   describe('findAll', () => {
     it('should return an array of users', async () => {
       const mockUsers: GetUserDto[] = [
-        { id: 1, email: 'test1@example.com', name: 'User 1', signupDate: new Date(), lastLogin: new Date(), role: 'user' },
-        { id: 2, email: 'test2@example.com', name: 'User 2', signupDate: new Date(), lastLogin: new Date(), role: 'user' },
+        {
+          id: 1,
+          email: 'test1@example.com',
+          name: 'User 1',
+          signupDate: new Date(),
+          lastLogin: new Date(),
+          role: 'user',
+        },
+        {
+          id: 2,
+          email: 'test2@example.com',
+          name: 'User 2',
+          signupDate: new Date(),
+          lastLogin: new Date(),
+          role: 'user',
+        },
       ];
 
       jest.spyOn(userService, 'findAll').mockResolvedValue(mockUsers);
@@ -49,7 +80,14 @@ describe('UserController', () => {
 
   describe('findUser', () => {
     it('should return a single user', async () => {
-      const mockUser: GetUserDto = { id: 1, email: 'test1@example.com', name: 'User 1', signupDate: new Date(), lastLogin: new Date(), role: 'user' };
+      const mockUser: GetUserDto = {
+        id: 1,
+        email: 'test1@example.com',
+        name: 'User 1',
+        signupDate: new Date(),
+        lastLogin: new Date(),
+        role: 'user',
+      };
 
       jest.spyOn(userService, 'findUser').mockResolvedValue(mockUser);
 
@@ -61,10 +99,16 @@ describe('UserController', () => {
   describe('createUser', () => {
     it('should create a new user', async () => {
       const createUserDto: CreateUserDto = { email: 'create@example.com', name: 'User 1', password: 'testCreate' };
-      const savedUser: GetUserDto = { id: 1, ...createUserDto, signupDate: new Date(), lastLogin: new Date(), role: 'user' };
+      const savedUser: GetUserDto = {
+        id: 1,
+        ...createUserDto,
+        signupDate: new Date(),
+        lastLogin: new Date(),
+        role: 'user',
+      };
 
       jest.spyOn(userService, 'createUser').mockImplementation(async () => {
-        return { ...savedUser} as GetUserDto;
+        return { ...savedUser } as GetUserDto;
       });
 
       const result = await controller.createUser(createUserDto);
@@ -75,7 +119,13 @@ describe('UserController', () => {
   describe('updateUser', () => {
     it('should update and return the user', async () => {
       const updateUserDto: UpdateUserDto = { email: 'update@example.com', name: 'User 1', role: 'admin' };
-      const mockUpdatedUser: GetUserDto = { id: 1, ...updateUserDto, signupDate: new Date(), lastLogin: new Date(), role: 'admin' } as GetUserDto;
+      const mockUpdatedUser: GetUserDto = {
+        id: 1,
+        ...updateUserDto,
+        signupDate: new Date(),
+        lastLogin: new Date(),
+        role: 'admin',
+      } as GetUserDto;
 
       jest.spyOn(userService, 'updateUser').mockResolvedValue(mockUpdatedUser);
 
@@ -94,4 +144,3 @@ describe('UserController', () => {
     });
   });
 });
-
