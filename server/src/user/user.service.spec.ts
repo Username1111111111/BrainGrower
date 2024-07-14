@@ -9,7 +9,7 @@ import { UpdateUserDto } from './dto/UpdateUser.dto';
 describe('UserService', () => {
   let service: UserService;
   let repository: Repository<User>;
-  let REPOSITORY_TOKEN =  getRepositoryToken(User);
+  const REPOSITORY_TOKEN = getRepositoryToken(User);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,11 +34,25 @@ describe('UserService', () => {
     expect(repository).toBeDefined();
   });
 
-  describe("findAll", () => {
-    it("should find all users", async () => {
+  describe('findAll', () => {
+    it('should find all users', async () => {
       const mockUsers: User[] = [
-        { id: 1, email: 'test1@example.com', name: 'User 1', signupDate: new Date(), lastLogin: new Date(), role: "user" } as User,
-        { id: 2, email: 'test2@example.com', name: 'User 2', signupDate: new Date(), lastLogin: new Date(), role: "user" } as User,
+        {
+          id: 1,
+          email: 'test1@example.com',
+          name: 'User 1',
+          signupDate: new Date(),
+          lastLogin: new Date(),
+          role: 'user',
+        } as User,
+        {
+          id: 2,
+          email: 'test2@example.com',
+          name: 'User 2',
+          signupDate: new Date(),
+          lastLogin: new Date(),
+          role: 'user',
+        } as User,
       ];
 
       jest.spyOn(repository, 'find').mockResolvedValueOnce(mockUsers);
@@ -47,12 +61,19 @@ describe('UserService', () => {
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe(1);
       expect(result[1].name).toBe('User 2');
-    })
-  })
+    });
+  });
 
   describe('findUser', () => {
     it('should return a single user', async () => {
-      const mockUser = { id: 1, email: 'test1@example.com', name: 'User 1', signupDate: new Date(), lastLogin: new Date(), role: 'user' } as User;
+      const mockUser = {
+        id: 1,
+        email: 'test1@example.com',
+        name: 'User 1',
+        signupDate: new Date(),
+        lastLogin: new Date(),
+        role: 'user',
+      } as User;
 
       jest.spyOn(repository, 'findOneBy').mockResolvedValue(mockUser);
 
@@ -64,7 +85,13 @@ describe('UserService', () => {
   describe('createUser', () => {
     it('should create and return a new user', async () => {
       const createUserDto: CreateUserDto = { email: 'create@example.com', name: 'User 1', password: 'testCreate' };
-      const savedUser: User = { id: 1, ...createUserDto, signupDate: new Date(), lastLogin: new Date(), role: 'user' } as User;
+      const savedUser: User = {
+        id: 1,
+        ...createUserDto,
+        signupDate: new Date(),
+        lastLogin: new Date(),
+        role: 'user',
+      } as User;
 
       jest.spyOn(repository, 'create').mockReturnValue(savedUser);
       jest.spyOn(repository, 'save').mockResolvedValue(savedUser);
@@ -77,7 +104,13 @@ describe('UserService', () => {
   describe('updateUser', () => {
     it('should update and return the user', async () => {
       const updateUserDto: UpdateUserDto = { email: 'update@example.com', name: 'User 1', role: 'admin' };
-      const updatedUser: User = { id: 1, ...updateUserDto, signupDate: new Date(), lastLogin: new Date(), password: 'password1' } as User;
+      const updatedUser: User = {
+        id: 1,
+        ...updateUserDto,
+        signupDate: new Date(),
+        lastLogin: new Date(),
+        password: 'password1',
+      } as User;
 
       jest.spyOn(repository, 'update').mockResolvedValue({ affected: 1 } as UpdateResult);
       jest.spyOn(repository, 'findOneBy').mockResolvedValue(updatedUser);
