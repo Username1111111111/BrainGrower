@@ -12,11 +12,11 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<GetUserDto[]> {
     const users = await this.userRepository.find();
-    return users.map(user => {
+    return users.map((user) => {
       const { password, ...result } = user;
       return result as GetUserDto;
     });
@@ -40,7 +40,7 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto): Promise<GetUserDto> {
     const newUser = this.userRepository.create({
-      ...createUserDto
+      ...createUserDto,
     });
     const savedUser = await this.userRepository.save(newUser);
     if (savedUser) {
@@ -60,5 +60,9 @@ export class UserService {
 
   async deleteUser(id: number) {
     return this.userRepository.delete(id);
+  }
+
+  async updateLastLogin(id: number): Promise<void> {
+    await this.userRepository.update(id, { lastLogin: new Date() });
   }
 }

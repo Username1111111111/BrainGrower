@@ -12,6 +12,8 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
     navigate('/');
   };
 
@@ -50,7 +52,7 @@ export default function Navbar() {
         <div className="d-flex flex-row justify-content-center align-items-center">
           {token && (
             <Link className={usernameC} to="/profile">
-              <li className={usernameC2}>Username</li>
+              <li className={usernameC2}>{t('profile')}</li>
             </Link>
           )}
           {!token && (

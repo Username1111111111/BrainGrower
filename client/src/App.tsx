@@ -22,6 +22,7 @@ const App: React.FC = () => {
             <Route path="/signup/" element={<SignupPage />} />
             <Route path="/users/" element={<UpdateUserPage />} />
             <Route path="/profile/" element={<ProfilePage />} />
+            <Route path="/profile/:id" element={<ProfilePage />} />
           </Routes>
         </Router>
       </I18nextProvider>
