@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "../types/User";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { User } from '../types/User';
 
 const baseUrl = import.meta.env.VITE_SERVER_DOMAIN;
 
@@ -40,6 +40,13 @@ export const userApi = createApi({
         body: user,
       }),
     }),
+    updateUserImage: builder.mutation({
+      query: ({ id, formData }) => ({
+        url: `user/${id}/upload`,
+        method: 'PUT',
+        body: formData,
+      }),
+    }),
     loginUser: builder.mutation<User, Partial<User>>({
       query: (user) => ({
         url: 'auth/login/',
@@ -57,14 +64,15 @@ export const userApi = createApi({
   }),
 });
 
-export const { 
-  useFetchUsersQuery, 
-  useFetchUserQuery, 
+export const {
+  useFetchUsersQuery,
+  useFetchUserQuery,
   useLazyFetchUserQuery,
-  useFetchUserByEmailQuery, 
-  useLazyFetchUserByEmailQuery, 
-  useAddUserMutation, 
+  useFetchUserByEmailQuery,
+  useLazyFetchUserByEmailQuery,
+  useAddUserMutation,
   useUpdateUserMutation,
   useLoginUserMutation,
-  useSignupUserMutation 
+  useSignupUserMutation,
+  useUpdateUserImageMutation,
 } = userApi;

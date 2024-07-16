@@ -25,6 +25,9 @@ export class User {
   @Column({ default: 'user' })
   role: string;
 
+  @Column({ nullable: true })
+  profileImage?: string;
+
   @BeforeInsert()
   async hashPassword() {
     if (this.password) {
