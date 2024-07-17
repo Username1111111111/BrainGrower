@@ -3,6 +3,7 @@ import { userApi } from '../redux/userApi';
 import { useTranslation } from 'react-i18next';
 import formatDate from '../lib/formatDate';
 import { MESSAGE } from '../lib/message';
+import { ActivityLogList } from './ActivityLogList';
 
 interface UserId {
   userId?: string;
@@ -88,6 +89,7 @@ export default function UserProfile({ userId }: UserId) {
             {uploading ? 'Uploading...' : 'Upload'}
           </button>
         </div>
+        <ActivityLogList userId={user!.id} />
       </div>
     </div>
   );

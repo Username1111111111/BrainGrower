@@ -43,9 +43,10 @@ export class UserController {
   @Roles('admin', 'user')
   async findUser(@Param('id', ParseIntPipe) id: number, @Request() req): Promise<GetUserDto> {
     const authUserId = req.user.id;
+    const isAdmin = req.user.role === 'admin';
 
-    if (req.user.role === 'admin' || id === authUserId) {
-      return this.userService.findUser(id);
+    if (isAdmin || id === authUserId) {
+      return this.userService.findUser(id, isAdmin);
     } else {
       throw new Error(MESSAGE.UNAUTHORIZED_ACCESS);
     }

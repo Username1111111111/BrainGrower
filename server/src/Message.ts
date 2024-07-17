@@ -1,5 +1,3 @@
-import { UnauthorizedException } from '@nestjs/common';
-
 interface MessageObj {
   [key: string]: string;
 }
@@ -12,4 +10,10 @@ export const MESSAGE: MessageObj = {
   LOGIN_SUCCESSFUL: 'Login successful',
   USER_CREATED_SUCCESSFULLY: 'User created successfully',
   UNAUTHORIZED_ACCESS: 'Unauthorized access to user profile',
+  USER_CREATED: 'Created',
+  USER_READ: 'Read',
+  USER_UPDATED: 'Updated',
+  USER_DELETED: 'Deleted',
+  USER_LOGGED_IN: 'Logged in',
+  USER_IMAGE_UPDATED: 'Image updated',
 };

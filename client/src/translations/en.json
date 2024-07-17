@@ -5,5 +5,8 @@
   "logout": "Log out",
   "signup": "Sign up",
   "users": "Users",
-  "profile": "Profile"
+  "profile": "Profile",
+  "activityLogs": "Activity",
+  "loading": "Loading",
+  "errorFetchingLogs": "Error fetching logs"
 }
