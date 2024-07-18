@@ -18,12 +18,18 @@ export class UserService {
     private activityLogService: ActivityLogService,
   ) {}
 
-  async findAll(): Promise<GetUserDto[]> {
-    const users = await this.userRepository.find();
-    return users.map((user) => {
-      const { password, ...result } = user;
-      return result as GetUserDto;
+  async findAll(page: number, limit: number): Promise<{ data: GetUserDto[]; total: number }> {
+    const [users, total] = await this.userRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
+    const result = users.map((user) => {
+      const { password, ...userData } = user;
+      return userData as GetUserDto;
+    });
+
+    return { data: result, total };
   }
 
   async findUser(id: number, isAdmin: boolean): Promise<GetUserDto> {

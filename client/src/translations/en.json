@@ -8,5 +8,7 @@
   "profile": "Profile",
   "activityLogs": "Activity",
   "loading": "Loading",
-  "errorFetchingLogs": "Error fetching logs"
+  "errorFetchingLogs": "Error fetching logs",
+  "errorLoadingUsers": "Error loading users",
+  "selectUser": "Select a user to edit"
 }
