@@ -27,4 +27,15 @@ export class ActivityLogService {
       take: 15,
     });
   }
+
+  async exportActivityLogs(userId: number): Promise<ActivityLog[]> {
+    return this.activityLogRepository.find({
+      where: {
+        user: { id: userId },
+      },
+      order: {
+        timestamp: 'DESC',
+      },
+    });
+  }
 }

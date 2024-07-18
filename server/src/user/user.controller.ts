@@ -11,6 +11,8 @@ import {
   Request,
   UseInterceptors,
   UploadedFile,
+  Query,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
@@ -23,7 +25,7 @@ import { Roles } from '../auth/roles.decorator';
 import { MESSAGE } from 'src/Message';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express';
+import { Express, Response } from 'express';
 
 @Controller('user')
 @UseGuards(AuthGuard, RolesGuard)
@@ -84,5 +86,15 @@ export class UserController {
     }
     const imageUrl = await this.cloudinaryService.uploadImage(file);
     return this.userService.updateUser(id, { profileImage: imageUrl });
+  }
+
+  @Get(':id/export')
+  async exportUserData(@Param('id') id: number, @Query('format') format: string, @Res() res: Response) {
+    const data = await this.userService.exportUserData(id, format);
+
+    const fileName = `user_${id}.${format}`;
+    res.setHeader('Content-Type', format === 'csv' ? 'text/csv' : 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+    res.send(data);
   }
 }

@@ -16,4 +16,5 @@ export const MESSAGE: MessageObj = {
   USER_DELETED: 'Deleted',
   USER_LOGGED_IN: 'Logged in',
   USER_IMAGE_UPDATED: 'Image updated',
+  USER_NOT_FOUND: 'User not found',
 };

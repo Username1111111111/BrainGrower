@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import formatDate from '../lib/formatDate';
 import { MESSAGE } from '../lib/message';
 import { ActivityLogList } from './ActivityLogList';
+import ExportUserData from './ExportUserData';
 
 interface UserId {
   userId?: string;
@@ -89,6 +90,7 @@ export default function UserProfile({ userId }: UserId) {
             {uploading ? 'Uploading...' : 'Upload'}
           </button>
         </div>
+        <ExportUserData userId={user!.id} />
         <ActivityLogList userId={user!.id} />
       </div>
     </div>

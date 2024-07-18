@@ -15,4 +15,10 @@ export class ActivityLogController {
   async getActivityLogs(@Param('id', ParseIntPipe) id: number): Promise<ActivityLog[]> {
     return this.activityLogService.getActivityLogs(id);
   }
+
+  @Get()
+  @Roles('admin', 'user')
+  async exportActivityLogs(@Param('id', ParseIntPipe) id: number): Promise<ActivityLog[]> {
+    return this.activityLogService.exportActivityLogs(id);
+  }
 }

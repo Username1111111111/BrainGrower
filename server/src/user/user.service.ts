@@ -8,6 +8,7 @@ import { GetUserDto } from './dto/GetUser.dto';
 import { AuthUserDto } from './dto/AuthUser.dto';
 import { ActivityLogService } from 'src/activityLog/activityLog.service';
 import { MESSAGE } from 'src/Message';
+import { Parser } from 'json2csv';
 
 @Injectable()
 export class UserService {
@@ -90,5 +91,24 @@ export class UserService {
     if (user) {
       await this.activityLogService.logActivity(user, MESSAGE.USER_LOGGED_IN);
     }
+  }
+
+  async exportUserData(userId: number, format: string): Promise<string> {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    const userActivity = await this.activityLogService.exportActivityLogs(userId);
+
+    if (!user) {
+      throw new Error(MESSAGE.USER_NOT_FOUND);
+    }
+
+    const { password, ...userData } = user;
+    const exportData = { ...userData, activityLog: { ...userActivity } };
+
+    if (format === 'csv') {
+      const parser = new Parser();
+      return parser.parse(exportData);
+    }
+
+    return JSON.stringify(exportData, null, 2);
   }
 }
