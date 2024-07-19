@@ -1,19 +1,23 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { debounce } from 'lodash';
 import { userApi } from '../redux/userApi';
 import { User } from '../types/User';
 import { setSelectedUser } from '../redux/selectedUserSlice';
-import { useDispatch } from 'react-redux';
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 
 export default function UserTable() {
   const location = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const pageParam = parseInt(params.get('page') || '1', 10);
+  const searchParam = params.get('search') || '';
   const [page, setPage] = useState(pageParam);
+  const [search, setSearch] = useState(searchParam);
+  const [debouncedSearch, setDebouncedSearch] = useState(searchParam);
   const limit = 10;
-  const { data, error, isLoading, refetch } = userApi.useFetchUsersQuery({ page, limit });
+  const { data, error, isLoading, refetch } = userApi.useFetchUsersQuery({ page, limit, search: debouncedSearch });
   const dispatch = useDispatch();
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const { t } = useTranslation();
@@ -32,19 +36,36 @@ export default function UserTable() {
   }, [updateSuccess, refetch]);
 
   useEffect(() => {
-    if (pageParam > totalPages) {
-      navigate(`/users?page=${totalPages}`);
-    } else if (pageParam < 1) {
-      navigate(`/users?page=1`);
-    } else if (page !== pageParam) {
+    if (pageParam !== page) {
       setPage(pageParam);
     }
-  }, [pageParam, totalPages, navigate]);
+    if (searchParam !== debouncedSearch) {
+      setDebouncedSearch(searchParam);
+    }
+  }, [pageParam, searchParam, debouncedSearch, page]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage <= totalPages && newPage >= 1) {
-      navigate(`/users?page=${newPage}`);
+      navigate(`/users?page=${newPage}&search=${debouncedSearch}`);
     }
+  };
+
+  const debouncedSetSearch = useCallback(
+    debounce((value: string) => {
+      setDebouncedSearch(value);
+      navigate(`/users?page=1&search=${value}`);
+    }, 300), // 300ms delay
+    [],
+  );
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+    debouncedSetSearch(event.target.value);
+  };
+
+  const handleSearchSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    navigate(`/users?page=1&search=${debouncedSearch}`);
   };
 
   if (isLoading) return <div className="text-center">{t('loading')}...</div>;
@@ -57,7 +78,7 @@ export default function UserTable() {
 
     if (startPage > 1) {
       pagination.push(
-        <button key="first" className="btn btn-link" onClick={() => handlePageChange(1)}>
+        <button key="first" className="btn " onClick={() => handlePageChange(1)}>
           First
         </button>,
       );
@@ -65,11 +86,7 @@ export default function UserTable() {
 
     for (let i = startPage; i <= endPage; i++) {
       pagination.push(
-        <button
-          key={i}
-          className={`btn ${i === page ? 'btn-primary' : 'btn-link'}`}
-          onClick={() => handlePageChange(i)}
-        >
+        <button key={i} className={`btn ${i === page ? 'btn-primary' : ''}`} onClick={() => handlePageChange(i)}>
           {i}
         </button>,
       );
@@ -77,7 +94,7 @@ export default function UserTable() {
 
     if (endPage < totalPages) {
       pagination.push(
-        <button key="last" className="btn btn-link" onClick={() => handlePageChange(totalPages)}>
+        <button key="last" className="btn" onClick={() => handlePageChange(totalPages)}>
           Last
         </button>,
       );
@@ -92,6 +109,15 @@ export default function UserTable() {
   return (
     <div className={`${fc} ${fc2}`}>
       <h4 className="text-center">{`Users (${total})`}</h4>
+      <form onSubmit={handleSearchSubmit} className="mb-3">
+        <input
+          type="text"
+          value={search}
+          onChange={handleSearchChange}
+          className="form-control"
+          placeholder="Search by name or email"
+        />
+      </form>
       <table className="table table-striped rounded">
         <thead className="rounded">
           <tr className="rounded m-0 p-0">
@@ -134,8 +160,7 @@ export default function UserTable() {
           ))}
         </tbody>
       </table>
-
-      <div className="d-flex justify-content-center align-items-center mt-3">{generatePagination()}</div>
+      <div className="pagination d-flex justify-content-center">{generatePagination()}</div>
     </div>
   );
 }

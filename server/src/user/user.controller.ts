@@ -37,8 +37,12 @@ export class UserController {
 
   @Get()
   @Roles('admin')
-  findAll(@Query('page') page = 1, @Query('limit') limit = 10): Promise<{ data: GetUserDto[]; total: number }> {
-    return this.userService.findAll(page, limit);
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('search') search = '',
+  ): Promise<{ data: GetUserDto[]; total: number }> {
+    return this.userService.findAll(page, limit, search);
   }
 
   @Get(':id')

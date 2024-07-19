@@ -20,8 +20,8 @@ export const userApi = createApi({
     fetchUser: builder.query<User, number>({
       query: (id) => `user/${id}`,
     }),
-    fetchUsers: builder.query<{ data: User[]; total: number }, { page: number; limit: number }>({
-      query: ({ page, limit }) => `user?page=${page}&limit=${limit}`,
+    fetchUsers: builder.query<{ data: User[]; total: number }, { page: number; limit: number; search?: string }>({
+      query: ({ page, limit, search = '' }) => `user?page=${page}&limit=${limit}&search=${search}`,
     }),
     fetchUserByEmail: builder.query<User, string>({
       query: (email) => `user/email/${email}`,

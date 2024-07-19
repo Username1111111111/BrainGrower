@@ -1,7 +1,7 @@
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { User } from './user.entity';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { GetUserDto } from './dto/GetUser.dto';
@@ -18,8 +18,9 @@ export class UserService {
     private activityLogService: ActivityLogService,
   ) {}
 
-  async findAll(page: number, limit: number): Promise<{ data: GetUserDto[]; total: number }> {
+  async findAll(page: number, limit: number, search: string): Promise<{ data: GetUserDto[]; total: number }> {
     const [users, total] = await this.userRepository.findAndCount({
+      where: [{ name: Like(`%${search}%`) }, { email: Like(`%${search}%`) }],
       skip: (page - 1) * limit,
       take: limit,
     });
