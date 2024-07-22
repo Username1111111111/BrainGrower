@@ -1,12 +1,30 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { User } from "../types/User";
+
 const baseUrl = import.meta.env.VITE_SERVER_DOMAIN;
 
+const baseQuery = fetchBaseQuery({
+  baseUrl,
+  prepareHeaders: (headers) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  },
+});
+
 export const userApi = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl }),
+  baseQuery,
   endpoints: (builder) => ({
+    fetchUser: builder.query<User, number>({
+      query: (id) => `user/${id}`,
+    }),
     fetchUsers: builder.query<User[], void>({
       query: () => 'user/',
+    }),
+    fetchUserByEmail: builder.query<User, string>({
+      query: (email) => `user/email/${email}`,
     }),
     addUser: builder.mutation<User, Partial<User>>({
       query: (user) => ({
@@ -22,7 +40,31 @@ export const userApi = createApi({
         body: user,
       }),
     }),
+    loginUser: builder.mutation<User, Partial<User>>({
+      query: (user) => ({
+        url: 'auth/login/',
+        method: 'POST',
+        body: user,
+      }),
+    }),
+    signupUser: builder.mutation<User, Partial<User>>({
+      query: (user) => ({
+        url: 'auth/signup/',
+        method: 'POST',
+        body: user,
+      }),
+    }),
   }),
-})
+});
 
-export const { useFetchUsersQuery, useLazyFetchUsersQuery, useAddUserMutation, useUpdateUserMutation } = userApi;
+export const { 
+  useFetchUsersQuery, 
+  useFetchUserQuery, 
+  useLazyFetchUserQuery,
+  useFetchUserByEmailQuery, 
+  useLazyFetchUserByEmailQuery, 
+  useAddUserMutation, 
+  useUpdateUserMutation,
+  useLoginUserMutation,
+  useSignupUserMutation 
+} = userApi;

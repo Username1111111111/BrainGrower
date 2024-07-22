@@ -9,5 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'; // Don't forget to import
   imports: [TypeOrmModule.forFeature([User])],
   providers: [UserService],
   controllers: [UserController],
+  exports: [UserService] // need to export for auth module to work
 })
 export class UserModule { }
