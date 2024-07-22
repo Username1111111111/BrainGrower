@@ -3,7 +3,10 @@
   "home": "Home",
   "login": "Log in",
   "logout": "Log out",
-  "signip": "Sign up",
+  "signup": "Sign up",
   "users": "Users",
-  "profilePage": "Profile page"
+  "profile": "Profile",
+  "activityLogs": "Activity",
+  "loading": "Loading",
+  "errorFetchingLogs": "Error fetching logs"
 }

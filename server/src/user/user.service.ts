@@ -6,26 +6,33 @@ import { User } from './user.entity';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { GetUserDto } from './dto/GetUser.dto';
 import { AuthUserDto } from './dto/AuthUser.dto';
+import { ActivityLogService } from 'src/activityLog/activityLog.service';
+import { MESSAGE } from 'src/Message';
+import { Parser } from 'json2csv';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) { }
+    private activityLogService: ActivityLogService,
+  ) {}
 
   async findAll(): Promise<GetUserDto[]> {
     const users = await this.userRepository.find();
-    return users.map(user => {
+    return users.map((user) => {
       const { password, ...result } = user;
       return result as GetUserDto;
     });
   }
 
-  async findUser(id: number): Promise<GetUserDto> {
+  async findUser(id: number, isAdmin: boolean): Promise<GetUserDto> {
     const user = await this.userRepository.findOneBy({ id });
     if (user) {
       const { password, ...result } = user;
+      if (!isAdmin) {
+        await this.activityLogService.logActivity(user, MESSAGE.USER_READ);
+      }
       return result as GetUserDto;
     }
   }
@@ -40,25 +47,68 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto): Promise<GetUserDto> {
     const newUser = this.userRepository.create({
-      ...createUserDto
+      ...createUserDto,
     });
     const savedUser = await this.userRepository.save(newUser);
     if (savedUser) {
       const { password, ...result } = savedUser;
+      await this.activityLogService.logActivity(savedUser, MESSAGE.USER_CREATED);
       return result as GetUserDto;
     }
   }
 
   async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<GetUserDto> {
+    const existingUser = await this.userRepository.findOneBy({ id });
+    if (!existingUser) {
+      return;
+    }
+    const isImageUpdate = updateUserDto.profileImage && updateUserDto.profileImage !== existingUser.profileImage;
+
     await this.userRepository.update(id, updateUserDto);
     const updatedUser = await this.userRepository.findOneBy({ id });
     if (updatedUser) {
       const { password, ...result } = updatedUser;
+      if (isImageUpdate) {
+        await this.activityLogService.logActivity(updatedUser, MESSAGE.USER_IMAGE_UPDATED);
+      } else {
+        await this.activityLogService.logActivity(updatedUser, MESSAGE.USER_UPDATED);
+      }
       return result as GetUserDto;
     }
   }
 
   async deleteUser(id: number) {
-    return this.userRepository.delete(id);
+    const user = await this.userRepository.findOneBy({ id });
+    await this.userRepository.delete(id);
+    if (user) {
+      await this.activityLogService.logActivity(user, MESSAGE.USER_DELETED);
+    }
+  }
+
+  async updateLastLogin(id: number): Promise<void> {
+    await this.userRepository.update(id, { lastLogin: new Date() });
+    const user = await this.userRepository.findOneBy({ id });
+    if (user) {
+      await this.activityLogService.logActivity(user, MESSAGE.USER_LOGGED_IN);
+    }
+  }
+
+  async exportUserData(userId: number, format: string): Promise<string> {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    const userActivity = await this.activityLogService.exportActivityLogs(userId);
+
+    if (!user) {
+      throw new Error(MESSAGE.USER_NOT_FOUND);
+    }
+
+    const { password, ...userData } = user;
+    const exportData = { ...userData, activityLog: { ...userActivity } };
+
+    if (format === 'csv') {
+      const parser = new Parser();
+      return parser.parse(exportData);
+    }
+
+    return JSON.stringify(exportData, null, 2);
   }
 }

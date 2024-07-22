@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { MESSAGE } from '../Message';
+import { ActivityLog } from '../activityLog/activityLog.entity';
 
 @Entity('User')
 export class User {
@@ -24,6 +25,12 @@ export class User {
 
   @Column({ default: 'user' })
   role: string;
+
+  @Column({ nullable: true })
+  profileImage?: string;
+
+  @OneToMany(() => ActivityLog, (activityLog) => activityLog.user)
+  activityLogs: ActivityLog[];
 
   @BeforeInsert()
   async hashPassword() {

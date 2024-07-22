@@ -3,6 +3,7 @@ import { User } from '../types/User';
 import { setSelectedUser } from '../redux/selectedUserSlice';
 import { useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function UserTable() {
   const { data: users, error, isLoading, refetch } = userApi.useFetchUsersQuery();
@@ -46,9 +47,21 @@ export default function UserTable() {
         <tbody>
           {users?.map((user: User) => (
             <tr className="rounded m-0" key={user.id}>
-              <td className="m-0 p-1 align-middle text-left">{user.id}</td>
-              <td className="m-0 p-0 p-1 align-middle text-left">{user.name}</td>
-              <td className="m-0 p-1 align-middle text-left">{user.email}</td>
+              <td className="m-0 p-1 align-middle text-left">
+                <Link to={`/profile/${user.id}`} className="text-black">
+                  {user.id}
+                </Link>
+              </td>
+              <td className="m-0 p-0 p-1 align-middle text-left">
+                <Link to={`/profile/${user.id}`} className="text-black">
+                  {user.name}
+                </Link>
+              </td>
+              <td className="m-0 p-1 align-middle text-left">
+                <Link to={`/profile/${user.id}`} className="text-black">
+                  {user.email}
+                </Link>
+              </td>
               <td className="m-0 p-1 align-middle text-left">
                 <button className="btn btn-transparent p-1" onClick={() => handleSelectUser(user)}>
                   ⚙️

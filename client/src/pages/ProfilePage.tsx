@@ -1,11 +1,13 @@
-import Page from '../ui/page/Page';
-import { useTranslation } from 'react-i18next';
-import withAuthRedirect from '../ui/withAuthRedirect';
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import Page from '../ui/page/Page';
+import withAuthRedirect from '../ui/withAuthRedirect';
+import UserProfile from '../ui/UserProfile';
 
 function ProfilePage() {
-  const { t } = useTranslation();
-  return <Page content={<div>{t('profilePage')}</div>} />;
+  const { id } = useParams();
+
+  return id ? <Page content={<UserProfile userId={id} />} /> : <Page content={<UserProfile />} />;
 }
 
 export default withAuthRedirect(ProfilePage, '/', (token) => !token);
