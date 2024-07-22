@@ -1,7 +1,6 @@
-import { IsEmail, IsString, IsNotEmpty, IsDate, IsNumber } from 'class-validator';
+import { IsEmail, IsString, IsNotEmpty, IsDate, IsNumber, IsOptional } from 'class-validator';
 
 export class GetUserDto {
-
   @IsNotEmpty()
   @IsNumber()
   id: number;
@@ -26,4 +25,8 @@ export class GetUserDto {
   @IsNotEmpty()
   @IsString()
   role: string;
+
+  @IsOptional()
+  @IsString()
+  profileImage?: string;
 }

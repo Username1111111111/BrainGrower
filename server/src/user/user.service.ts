@@ -6,8 +6,8 @@ import { User } from './user.entity';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { GetUserDto } from './dto/GetUser.dto';
 import { AuthUserDto } from './dto/AuthUser.dto';
-import { ActivityLogService } from 'src/activityLog/activityLog.service';
-import { MESSAGE } from 'src/Message';
+import { ActivityLogService } from '../activityLog/activityLog.service';
+import { MESSAGE } from '../Message';
 import { Parser } from 'json2csv';
 
 @Injectable()

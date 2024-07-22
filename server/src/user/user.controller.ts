@@ -22,8 +22,8 @@ import { AuthUserDto } from './dto/AuthUser.dto';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/roles.decorator';
-import { MESSAGE } from 'src/Message';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { MESSAGE } from '../Message';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express, Response } from 'express';
 

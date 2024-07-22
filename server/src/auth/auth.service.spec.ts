@@ -22,6 +22,7 @@ describe('AuthService', () => {
           useValue: {
             findUserByEmail: jest.fn(),
             createUser: jest.fn(),
+            updateLastLogin: jest.fn(),
           },
         },
         {
@@ -56,6 +57,7 @@ describe('AuthService', () => {
       jest.spyOn(userService, 'findUserByEmail').mockResolvedValue(mockUser);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
       jest.spyOn(jwtService, 'signAsync').mockResolvedValue(mockToken);
+      jest.spyOn(userService, 'updateLastLogin').mockResolvedValue();
 
       const result = await service.signIn('test@example.com', 'plainTextPassword');
       expect(result).toEqual({ access_token: mockToken, role: 'user' });
