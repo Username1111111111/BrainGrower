@@ -19,6 +19,6 @@ describe('App', () => {
   it('renders Signup page', () => {
     render(<App />);
 
-    expect(screen.getByText('signup')).toBeInTheDocument();
+    expect(screen.getByText('Sign up')).toBeInTheDocument();
   });
 });

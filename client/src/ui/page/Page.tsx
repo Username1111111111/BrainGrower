@@ -1,8 +1,22 @@
 import Navbar from './Navbar';
 import MainContent from './Main';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import isTokenExpired from '../../lib/isTokenExpired';
 
 export default function Page({ content }) {
+  const location = useLocation();
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (isTokenExpired(token)) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      localStorage.removeItem('id');
+      localStorage.removeItem('name');
+    }
+  }, [location, token]);
+
   return (
     <>
       <div className="container-fluid">

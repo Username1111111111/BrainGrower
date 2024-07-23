@@ -11,8 +11,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async signIn(@Body() signInDto: SignInDto) {
-    const { access_token, role } = await this.authService.signIn(signInDto.email, signInDto.plainTextPassword);
-    return { access_token, role, message: MESSAGE.LOGIN_SUCCESSFUL };
+    const { access_token, role, id, name } = await this.authService.signIn(
+      signInDto.email,
+      signInDto.plainTextPassword,
+    );
+    return { access_token, role, id, name, message: MESSAGE.LOGIN_SUCCESSFUL };
   }
 
   @HttpCode(HttpStatus.CREATED)

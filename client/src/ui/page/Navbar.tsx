@@ -12,10 +12,11 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
     navigate('/');
   };
 
-  // < 120 per line. Perfect :)
   const ulC = 'd-flex flex-row flex-wrap justify-content-between w-100';
   const ulC2 = 'm-0 p-0 border border-secondary border-top-0 bg-body-secondary';
 
@@ -50,7 +51,7 @@ export default function Navbar() {
         <div className="d-flex flex-row justify-content-center align-items-center">
           {token && (
             <Link className={usernameC} to="/profile">
-              <li className={usernameC2}>Username</li>
+              <li className={usernameC2}>{t('profile')}</li>
             </Link>
           )}
           {!token && (

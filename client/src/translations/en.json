@@ -3,7 +3,12 @@
   "home": "Home",
   "login": "Log in",
   "logout": "Log out",
-  "signip": "Sign up",
+  "signup": "Sign up",
   "users": "Users",
-  "profilePage": "Profile page"
+  "profile": "Profile",
+  "activityLogs": "Activity",
+  "loading": "Loading",
+  "errorFetchingLogs": "Error fetching logs",
+  "errorLoadingUsers": "Error loading users",
+  "selectUser": "Select a user to edit"
 }

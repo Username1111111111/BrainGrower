@@ -41,7 +41,7 @@ describe('Navbar', () => {
     expect(screen.queryByText('login')).not.toBeInTheDocument();
     expect(screen.queryByText('signup')).not.toBeInTheDocument();
     expect(screen.getByText('logout')).toBeInTheDocument();
-    expect(screen.getByText('Username')).toBeInTheDocument();
+    expect(screen.getByText('profile')).toBeInTheDocument();
   });
 
   it('handles logout correctly', () => {

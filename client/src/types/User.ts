@@ -5,4 +5,5 @@ export interface User {
   lastLogin: Date;
   signupDate: Date;
   role: string;
+  profileImage: string;
 }

@@ -1,6 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import { setupStore } from '../redux/store';
 import { userApi } from '../redux/userApi';
 import UserTable from './UserTable';
@@ -14,7 +14,7 @@ describe('UserTable', () => {
 
   beforeEach(() => {
     userApi.useFetchUsersQuery = vi.fn().mockReturnValue({
-      data: mockUsers,
+      data: { data: mockUsers, total: mockUsers.length },
       error: undefined,
       isLoading: false,
       refetch: vi.fn(),
@@ -24,17 +24,26 @@ describe('UserTable', () => {
   it('renders user table with correct data', () => {
     render(
       <Provider store={setupStore()}>
-        <UserTable />
+        <MemoryRouter>
+          <UserTable />
+        </MemoryRouter>
       </Provider>,
     );
 
-    expect(screen.getByText('Users')).toBeInTheDocument();
+    expect(screen.getByText('Users (2)')).toBeInTheDocument();
 
     mockUsers.forEach((user) => {
-      expect(screen.getByText(user.id.toString())).toBeInTheDocument();
+      const userIdElements = screen.queryAllByRole('link', { name: user.id.toString() });
+      expect(userIdElements).toHaveLength(1);
+      expect(userIdElements[0]).toBeInTheDocument();
+
       expect(screen.getByText(user.name)).toBeInTheDocument();
       expect(screen.getByText(user.email)).toBeInTheDocument();
     });
+
+    const paginationButtons = screen.queryAllByText(/^\d+$/);
+    expect(paginationButtons.map((btn) => btn.textContent)).toContain('2');
+    expect(screen.getByText('2')).toBeInTheDocument();
   });
 
   it('displays loading state while fetching users', () => {
@@ -47,11 +56,13 @@ describe('UserTable', () => {
 
     render(
       <Provider store={setupStore()}>
-        <UserTable />
+        <MemoryRouter>
+          <UserTable />
+        </MemoryRouter>
       </Provider>,
     );
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByText('loading...')).toBeInTheDocument();
   });
 
   it('displays error message when fetch users fails', () => {
@@ -66,10 +77,12 @@ describe('UserTable', () => {
 
     render(
       <Provider store={setupStore()}>
-        <UserTable />
+        <MemoryRouter>
+          <UserTable />
+        </MemoryRouter>
       </Provider>,
     );
 
-    expect(screen.getByText(`Error fetching users`)).toBeInTheDocument();
+    expect(screen.getByText('errorLoadingUsers')).toBeInTheDocument();
   });
 });

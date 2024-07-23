@@ -14,7 +14,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    "react/prop-types": "off", // lifesaver
+    "react/prop-types": "off",
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'max-len': ['error', { code: 120 }],
   },

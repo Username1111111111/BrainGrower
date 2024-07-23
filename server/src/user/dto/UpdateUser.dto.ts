@@ -1,7 +1,6 @@
 import { IsEmail, IsString, IsNotEmpty, MinLength, IsOptional, IsDate } from 'class-validator';
 
 export class UpdateUserDto {
-
   @IsEmail()
   @IsOptional()
   @IsString()
@@ -27,4 +26,8 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   role?: string;
+
+  @IsOptional()
+  @IsString()
+  profileImage?: string;
 }

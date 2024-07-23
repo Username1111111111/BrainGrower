@@ -25,7 +25,7 @@ describe('UpdateUser', () => {
       </Provider>,
     );
 
-    expect(screen.getByText('Select a user to edit')).toBeInTheDocument();
+    expect(screen.getByText('selectUser')).toBeInTheDocument();
   });
 
   it('renders the update form with correct initial values', () => {

@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "../types/User";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { User } from '../types/User';
 
 const baseUrl = import.meta.env.VITE_SERVER_DOMAIN;
 
@@ -20,8 +20,8 @@ export const userApi = createApi({
     fetchUser: builder.query<User, number>({
       query: (id) => `user/${id}`,
     }),
-    fetchUsers: builder.query<User[], void>({
-      query: () => 'user/',
+    fetchUsers: builder.query<{ data: User[]; total: number }, { page: number; limit: number; search?: string }>({
+      query: ({ page, limit, search = '' }) => `user?page=${page}&limit=${limit}&search=${search}`,
     }),
     fetchUserByEmail: builder.query<User, string>({
       query: (email) => `user/email/${email}`,
@@ -38,6 +38,13 @@ export const userApi = createApi({
         url: `user/${id}`,
         method: 'PUT',
         body: user,
+      }),
+    }),
+    updateUserImage: builder.mutation({
+      query: ({ id, formData }) => ({
+        url: `user/${id}/upload`,
+        method: 'PUT',
+        body: formData,
       }),
     }),
     loginUser: builder.mutation<User, Partial<User>>({
@@ -57,14 +64,15 @@ export const userApi = createApi({
   }),
 });
 
-export const { 
-  useFetchUsersQuery, 
-  useFetchUserQuery, 
+export const {
+  useFetchUsersQuery,
+  useFetchUserQuery,
   useLazyFetchUserQuery,
-  useFetchUserByEmailQuery, 
-  useLazyFetchUserByEmailQuery, 
-  useAddUserMutation, 
+  useFetchUserByEmailQuery,
+  useLazyFetchUserByEmailQuery,
+  useAddUserMutation,
   useUpdateUserMutation,
   useLoginUserMutation,
-  useSignupUserMutation 
+  useSignupUserMutation,
+  useUpdateUserImageMutation,
 } = userApi;

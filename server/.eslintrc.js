@@ -26,7 +26,7 @@ module.exports = {
             'error',
             {
                 endOfLine: 'auto',
-                bracketSpacing: true, // lifesaver, but was in the wrong place
+                bracketSpacing: true,
             }
         ],
         'no-console': ['error', { allow: ['warn', 'error'] }],

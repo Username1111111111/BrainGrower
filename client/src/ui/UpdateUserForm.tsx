@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { useUpdateUserMutation, useFetchUsersQuery } from '../redux/userApi';
 import { MESSAGE } from '../lib/message';
+import { useTranslation } from 'react-i18next';
 
 export default function UpdateUser() {
   const [name, setName] = useState('');
@@ -14,7 +15,8 @@ export default function UpdateUser() {
   const selectedUser = useSelector((state: RootState) => state.selectedUser.user);
   const [success, setSuccess] = useState(false);
   const [updateUser] = useUpdateUserMutation();
-  const { refetch } = useFetchUsersQuery();
+  const { refetch } = useFetchUsersQuery({ page: 1, limit: 10 });
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (selectedUser) {
@@ -65,7 +67,7 @@ export default function UpdateUser() {
   };
 
   if (!selectedUser) {
-    return <div className="text-center">Select a user to edit</div>;
+    return <div className="text-center">{t('selectUser')}</div>;
   }
 
   const isFormChanged = name !== initialName || email !== initialEmail || password !== '';

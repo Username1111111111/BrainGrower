@@ -24,31 +24,6 @@ describe('SignupForm', () => {
     expect(screen.getByRole('button', { name: /create/i })).toBeInTheDocument();
   });
 
-  // it('updates input values on change', () => {
-  //   render(
-  //     <Provider store={setupStore()}>
-  //       <Router>
-  //         <SignupForm />
-  //       </Router>
-  //     </Provider>
-  //   );
-
-  //   const nameInput = screen.getByLabelText('Name:');
-  //   const emailInput = screen.getByLabelText('Email:');
-  //   const passwordInput = screen.getByLabelText('Password:');
-  //   const confirmPasswordInput = screen.getByLabelText('Confirm password:');
-
-  //   userEvent.type(nameInput, 'John Doe');
-  //   userEvent.type(emailInput, 'john.doe@example.com');
-  //   userEvent.type(passwordInput, 'password123');
-  //   userEvent.type(confirmPasswordInput, 'password123');
-
-  //   expect(nameInput).toHaveValue('John Doe');
-  //   expect(emailInput).toHaveValue('john.doe@example.com');
-  //   expect(passwordInput).toHaveValue('password123');
-  //   expect(confirmPasswordInput).toHaveValue('password123');
-  // });
-
   it('displays error message on password mismatch', async () => {
     render(
       <Provider store={setupStore()}>

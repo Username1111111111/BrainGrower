@@ -8,5 +8,13 @@ export const MESSAGE: MessageObj = {
   USER_EXISTS: 'User with such email already exists',
   PASSWORDS_DONT_MATCH: 'Passwords do not match',
   LOGIN_SUCCESSFUL: 'Login successful',
-  USER_CREATED_SUCCESSFULLY: 'User created successfully'
-}
+  USER_CREATED_SUCCESSFULLY: 'User created successfully',
+  UNAUTHORIZED_ACCESS: 'Unauthorized access to user profile',
+  USER_CREATED: 'Created',
+  USER_READ: 'Read',
+  USER_UPDATED: 'Updated',
+  USER_DELETED: 'Deleted',
+  USER_LOGGED_IN: 'Logged in',
+  USER_IMAGE_UPDATED: 'Image updated',
+  USER_NOT_FOUND: 'User not found',
+};
