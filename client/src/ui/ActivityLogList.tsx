@@ -21,7 +21,6 @@ export const ActivityLogList: React.FC<ActivityLogProps> = ({ userId }) => {
         <tbody>
           {logs?.map((log) => (
             <tr className="p-0 m-0" key={log.id}>
-              {/* <td className='p-0 m-0 ms-1'>{index + 1}</td> */}
               <td className="p-0 m-0 me-2">{log.activity}</td>
               <td className="p-0 m-0">{formatDate(log.timestamp)}</td>
             </tr>

@@ -54,7 +54,7 @@ export default function UserTable() {
     debounce((value: string) => {
       setDebouncedSearch(value);
       navigate(`/users?page=1&search=${value}`);
-    }, 300), // 300ms delay
+    }, 300),
     [],
   );
 
@@ -152,7 +152,11 @@ export default function UserTable() {
                 </Link>
               </td>
               <td className="m-0 p-1 align-middle text-left">
-                <button className="btn btn-transparent p-1" onClick={() => handleSelectUser(user)}>
+                <button
+                  id={`btn-${user.id}`}
+                  className="btn btn-transparent p-1"
+                  onClick={() => handleSelectUser(user)}
+                >
                   ⚙️
                 </button>
               </td>

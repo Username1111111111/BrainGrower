@@ -17,7 +17,6 @@ export default function Navbar() {
     navigate('/');
   };
 
-  // < 120 per line. Perfect :)
   const ulC = 'd-flex flex-row flex-wrap justify-content-between w-100';
   const ulC2 = 'm-0 p-0 border border-secondary border-top-0 bg-body-secondary';
 

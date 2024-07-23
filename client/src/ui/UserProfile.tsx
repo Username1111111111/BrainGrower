@@ -32,7 +32,6 @@ export default function UserProfile({ userId }: UserId) {
       formData.append('file', file);
 
       try {
-        // Based on the fetched user, which are fetched conditionaly from useFetchQuery, I am updating image by id
         await updateUserImage({ id: user!.id, formData });
       } catch (error) {
         throw new Error(`${MESSAGE.FAILED_UPLOAD_IMAGE}: ${error}`);

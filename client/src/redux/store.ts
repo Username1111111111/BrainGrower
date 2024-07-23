@@ -3,8 +3,9 @@ import { userApi } from './userApi';
 import selectedUserReducer from './selectedUserSlice';
 import { activityLogApi } from './activityLogApi';
 import { exportUserApi } from './exportUserApi';
+import { RootState } from '@reduxjs/toolkit/query';
 
-export const setupStore = () => {
+export const setupStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({
     reducer: {
       [userApi.reducerPath]: userApi.reducer,
@@ -17,6 +18,7 @@ export const setupStore = () => {
         .concat(userApi.middleware)
         .concat(activityLogApi.middleware) // concat new api here or won't work
         .concat(exportUserApi.middleware),
+    preloadedState,
   });
 };
 
